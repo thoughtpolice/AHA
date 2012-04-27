@@ -1,4 +1,4 @@
-% PELCGBTENCUL BZT or, rot13("CRYPTOGRAPHY OMG")
+% CRYPTOGRAPHY OMG or, rot13(rot13("CRYPTOGRAPHY OMG"))
 % Austin Seipp
 % AHA 0x0043 - April 26th, 2012
 
@@ -86,7 +86,8 @@ Is OpenSSL fast?
 
 NaCl, the **N**etworking **a**nd **C**ryptography **l**ibrary
 (pronounced "salt") is a new library for cryptographic primitives
-designed by Dan J. Bernstein (qmail/djbdns fame.)
+designed by Dan J. Bernstein (qmail/djbdns fame.) It uses elliptic
+curve cryptography.
 
 Home page: <http://nacl.cace-project.eu/>
 
@@ -112,7 +113,29 @@ Read this casual, epic paper:
 
 # Case study: NaCl - Ease-of-use
 
+~~~~~~{.c}
+// generate keys
+int crypto_box_keypair(uint8_t* pk,uint8_t* sk);
+// authenticated encryption
+int crypto_box(uint8_t* cipher_out, uint8_t* msg,
+               unsigned long mlen, uint8_t* nonce,
+			   uint8_t* pubkey, uint8_t* seckey);
+~~~~~~
+
+All functions either succeed and return 0, or fail and return non
+0. No trinary error modes, complex interfaces. Pretty much every API
+looks just like this and everything has predetermined lengths.
+
 # Case study: NaCl - Speed
+
+Much of the optimized NaCl code is machine generated, and most of it
+verified as previously explained.
+
+The library benchmarks itself at build time, in order to select the
+fastest primitives for your machine on a per-CPU basis (corollary: not
+in your package manager.)
+
+# Case study: NaCl - Speed (pt 2)
 
 Benchmark: Streaming encryption - <http://thoughtpolice.github.com/salt/bench/results.html#b28>
 
@@ -133,6 +156,20 @@ intervals in the face of outliers like process creation/context switches.
 
 # Pitfalls
 
+ * Most cryptographic APIs require you generate the nonces. There is
+   no way to abstract this generically enough behind the API to be
+   useful to everyone. Nonce creation should be carefully thought of,
+   as it's a matter of cryptographic concern.
+ * Most of the encryption modes supported may not potentially abide by
+   e.g. FIPS requirements. For example, there currently isn't an
+   authenticated encryption mode that uses the NIST P-256 curve or any
+   NIST curves; so you may not be able to use these if you work for
+   the government or elsewhere. Tread carefully.
+ * Most of the optimized implementations are machine generated
+   assembly; they also aren't provided in a relocatable form; thus,
+   unsuitable for dynamic libraries. The C reference implementations
+   will work however, at the expense of speed.
+
 # Conclusion
 
  * Cryptographic APIs can be drastically simpler, safer and faster
@@ -150,3 +187,8 @@ Any questions? No? Didn't think so.
 Slides online: <http://hacks.yi.org/rants.html>
 
 XOXOXOXOXOs, death threats, et cetera: <mad.one@gmail.com> or tweet me `@stdlib`
+
+# el fin
+
+Thanks for listening
+
