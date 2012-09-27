@@ -1,8 +1,13 @@
+<<<<<<< HEAD
 % An introduction to static analysis
+=======
+% Static analysis: an overview
+>>>>>>> 77e9b1adff6c950e324bf56ad5edc6840370e88f
 % Austin Seipp
 % AHA 0x0048 - August 27th, 2012
 
 # Quick Prep
+<<<<<<< HEAD
 
 ## What this talk is:
 
@@ -217,6 +222,15 @@ which can obviously expose extremely subtle bugs that can even confuse experts.)
 > to explain this to me, maybe you should have to change the way it's working."
 > If the analyzer can't figure it out, other programmers might not be able to
 > figure it out, and that will cause problems too..." - John Carmack
+=======
+## What this talk is:
+
+## What it isn't:
+
+# Lorem Ipsum
+
+# More Lorem Ipsum
+>>>>>>> 77e9b1adff6c950e324bf56ad5edc6840370e88f
 
 # el fin
 
