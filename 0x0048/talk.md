@@ -1,13 +1,8 @@
-<<<<<<< HEAD
 % An introduction to static analysis
-=======
-% Static analysis: an overview
->>>>>>> 77e9b1adff6c950e324bf56ad5edc6840370e88f
 % Austin Seipp
 % AHA 0x0048 - August 27th, 2012
 
 # Quick Prep
-<<<<<<< HEAD
 
 ## What this talk is:
 
@@ -86,7 +81,30 @@ f(unsigned int x)
 
 # Simple example: control flow graph
 
-TODO
+DEMO
+
+# Bigger example
+
+~~~~~~ {.c}
+bool example(int x)
+{
+  bool positiveFlag;
+
+  if (x < 0)
+  {
+   positiveFlag = false;
+  }
+  else if (x > 0)
+  {
+    positiveFlag = true;
+  }
+  return positiveFlag;
+}
+~~~~~~
+
+# Bigger example: CFG
+
+DEMO
 
 # Constraints, facts and symbolism
 
@@ -112,9 +130,20 @@ the analyzer is wrong.
 
 # Analysis: the Java side
 
+ * FindBugs - <http://findbugs.sf.net>
+ * Very useful, finds lots of great bugs (especially violations of type safety)
+ * Java is fairly amenable to mechanical transformations (syntactically simple,
+   most importantly) and it has an actual module system, making integration and
+   easier and simpler.
+ * We have found many bugs using it (at Rapid7, and my last job.)
 
 # Analysis: the C/C++/Objective-C side
 
+ * Clang, a C/C++/Objective-C compiler, comes with a built in analyzer:
+   <http://clang.llvm.org> & <http://clang-analyzer.llvm.org>
+ * C/C++/Objective-C are **considerably more difficult** to analyze correctly
+   due to complexities and ambiguities in the languages like the preprocessor
+   and semantics/syntax. The burden of tool development is significantly higher.
 
 # An example of a simple analysis with Clang (pt. 1)
 
@@ -165,7 +194,7 @@ DivZeroChecker::checkPreStmt(const BinaryOperator *B,
   possiblities: zero & non-zero. If we assume this, and
   then can show it's not possible to be in a state
   where the denominator is not zero, report a bug. */
-  llvm::tie(stateNotZero, stateZero) 
+  llvm::tie(stateNotZero, stateZero)
     = CM.assumeDual(C.getState(), *DV);
 
   if (!stateNotZero) {
@@ -175,7 +204,27 @@ DivZeroChecker::checkPreStmt(const BinaryOperator *B,
   }
 ~~~~~~
 
-# Politics in my analyzer?
+# Bigger example: `alloca(0)`, `malloc(0)` and friends
+
+# Running these examples
+
+Clang integrates directly with your build system via a little tool called
+`scan-build`. Just do:
+
+~~~~~~ {.bash}
+$ scan-build make
+# OR
+$ scan-build gcc -O1 file.c
+~~~~~~
+
+FindBugs integrates directly into your Java IDE or build system (Ant, Maven,
+etc.)
+
+# Looking at the output
+
+DEMO
+
+# Politics? In my analyzer?
 
 Working on, using, and designing these tools is often a game of politics and
 nuance, because there is lots of ugly code in the Real World, and lots of
@@ -222,15 +271,13 @@ which can obviously expose extremely subtle bugs that can even confuse experts.)
 > to explain this to me, maybe you should have to change the way it's working."
 > If the analyzer can't figure it out, other programmers might not be able to
 > figure it out, and that will cause problems too..." - John Carmack
-=======
-## What this talk is:
 
-## What it isn't:
+# Future talks
 
-# Lorem Ipsum
-
-# More Lorem Ipsum
->>>>>>> 77e9b1adff6c950e324bf56ad5edc6840370e88f
+ * Domain-specific static analysis (focus your analyzers on a specific problem,
+   much better power-to-weight ratio.)
+ * Algorithms (tree pruning, graph sharing) and underlying order theory.
+ * Other necessities: build system integration, interprocedural analysis, etc
 
 # el fin
 
